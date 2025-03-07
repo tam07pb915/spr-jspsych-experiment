@@ -91,7 +91,7 @@ Data transformation is necessary for analysis:
 - You will need to aggregate data across participants and stimuli
 - Analysis typically involves comparing reading times across conditions
 
-Example data processing code will be provided in a separate file. Please see the [Sample Data Output](sample-data-output.txt)
+Example data processing code will be provided in a separate file. Please see `/sample-experiment/sample-data-output.txt`
 
 ### Technical Requirements
 

@@ -77,6 +77,22 @@ The full experiment version includes Firebase integration for data storage, but 
    };
 3. Set up appropriate security rules in your Firebase console
 
+### Data Output and Analysis
+The experiment produces JSON data in the following format:
+
+- Each trial generates a data object with specific properties
+- Reading time (rt) is recorded in milliseconds for each word segment
+- Comprehension question accuracy is stored
+- Trial metadata (item ID, condition, etc.) is included
+
+Data transformation is necessary for analysis:
+
+- The raw JSON output needs processing to extract reading times by condition
+- You will need to aggregate data across participants and stimuli
+- Analysis typically involves comparing reading times across conditions
+
+Example data processing code will be provided in a separate file. Please see the [Sample Data Output](sample-data-output.txt)
+
 ### Technical Requirements
 
 - Modern web browser with JavaScript enabled

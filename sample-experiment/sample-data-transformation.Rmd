@@ -1,0 +1,99 @@
+---
+title: "Sample Data Transformation"
+author: "Tamura"
+date: "2025-03-07"
+output: html_document
+---
+
+In this document, I will show you how to transform data obtained in the jsPsych experiment into a format that can be used for analysis in R. The output from the jsPsych experiment is JSON format, which is not suitable for analysis in R. Therefore, we need to convert the JSON data into a format that can be used for analysis in R.
+
+# Load the necessary libraries
+```{r}
+library(tidyverse)
+library(jsonlite)
+```
+
+# Read the JSON data
+
+```{r}
+dat <- fromJSON("sample-data-output.txt")
+head(dat,20)
+```
+
+The following is the list of the variables in the data:
+```{r}
+str(dat)
+```
+
+But first we need to remember that the task includes a practice section and a main task section. And in each trial, there is a sentence reading part and a comprehension question part.
+
+# Divide the data into practice and main task sections
+First, we need to divide the data into practice and main task sections. This is because the practice section is usually not included in the analysis.
+
+```{r}
+practice <- dat %>% 
+  filter(trialType == "practice")
+main_task <- dat %>%
+  filter(trialType == "main")
+```
+
+```{r}
+head(practice)
+head(main_task)
+```
+
+# Divide the data into sentence reading and comprehension question sections
+Next, we need to divide the data into sentence reading and comprehension question sections. This is because the accuracy of comprehension questions and the reading time of sentences are usually analyzed separately.
+
+```{r}
+sentence_reading <- main_task %>% 
+  filter(is.na(comprehension_question))
+comprehension_question <- main_task %>% 
+  filter(!is.na(comprehension_question))
+```
+
+
+# Extract the necessary variables
+## Reading data
+Next, we need to extract the necessary variables from the data. The necessary variables are usually the subject ID (which is not relevant here because there is only one file), the trial number, the sentence, and the response time.
+
+```{r}
+sentence_reading2 <- sentence_reading %>%
+  select(trialNumber, itemID, rt, regionNumber, condition, presented_word)
+print(sentence_reading2)
+```
+
+## Comprension data
+We do the same for the comprehension data, but we also need to extract the correct answer and the response to the comprehension question.
+```{r}
+comprehension_question2 <- comprehension_question %>%
+  select(trialNumber, itemID, rt, condition, sentence, comprehension_question, correctAnswer, correct, response)
+print(comprehension_question2)
+```
+
+# Sample Analysis
+## Reading time
+Finally, we can perform some simple analysis on the data. For example, we can calculate the average reading time for each target regions (Regions 4 to 6).
+
+```{r}
+sentence_reading2 %>% 
+  filter(regionNumber %in% c(4,5,6)) %>% 
+  group_by(regionNumber) %>%
+  group_by(condition,.add = T) %>%
+  summarise(mean_rt = mean(rt, na.rm = TRUE),
+            sd_rt = sd(rt, na.rm = TRUE),
+            n = n())
+
+```
+
+## Comprehension accuracy
+We can also calculate the accuracy of the comprehension questions.
+
+```{r}
+comprehension_question2 %>%
+  summarise(mean_accuracy = mean(correct, na.rm = TRUE),
+            sd_accuracy = sd(correct, na.rm = TRUE),
+            n = n())
+```
+
+

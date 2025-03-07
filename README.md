@@ -87,12 +87,22 @@ The full experiment version includes Firebase integration for data storage, but 
 This project is licensed under the MIT License - see the LICENSE file for details.
 The MIT License is a permissive license that allows you to freely use, modify, distribute, and even sell this software, provided that you include the original copyright notice and the license text in any substantial portions of the software.
 
-### Credit & Acknowledgments
+## Credit & Acknowledgments
+
 This project was built based on the tutorial "Week 4 practical | Online Experiments for Language Scientists" by Kenny Smith:
-[https://kennysmithed.github.io/oels2020/oels_practical_wk4.html]
+[https://kennysmithed.github.io/oels2020/oels_practical_wk4.html](https://kennysmithed.github.io/oels2020/oels_practical_wk4.html)
+
+The original tutorial is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). This means you are free to:
+- Share — copy and redistribute the material in any medium or format
+- Adapt — remix, transform, and build upon the material for any purpose, even commercially
+
+Under the following terms:
+- Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made.
+
+My implementation builds upon the concepts and code presented in the tutorial while making substantial modifications and additions for specific experimental purposes.
 
 ### Citation & Reference
-If you use this code in your research, please cite:
+If you use my code in your research, please cite:
 
 Tamura, Y. (2025). jsPsych Self-Paced Reading Experiment \[Computer software\].
 https://github.com/yourusername/jspsych-spr-experiment

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Self-Paced Reading Demo</title>
+  <script src="https://unpkg.com/jspsych@7.3.3"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.2"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-fullscreen@1.1.2"></script>
+  <link href="https://unpkg.com/jspsych@7.3.3/css/jspsych.css" rel="stylesheet" type="text/css" />
+
+  <style>
+    .left-prompt,
+    .right-prompt {
+      position: absolute;
+      bottom: 100px;
+    }
+
+    .left-prompt {
+      left: 25%;
+    }
+
+    .right-prompt {
+      right: 25%;
+    }
+
+    .prepare {
+      text-align: left;
+    }
+
+    .target {
+      text-align: left;
+      margin-top: 20px;
+      font-family: 'Consolas', monospace;
+    }
+  </style>
+</head>
+
+<body></body>
+<script>
+  // First, modify the jsPsych initialization to include our analysis function
+const jsPsych = initJsPsych({
+  on_finish: function () {
+    var trialData = jsPsych.data.get().filter({ exp_item: true });
+    jsPsych.data.displayData();
+  }
+});
+
+  // Instructions
+  var instructions = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `
+    <div style="text-align: left;">
+      <h2>Self-Paced Reading Demo</h2>
+      
+      <p>In this demo, you will see sentences presented one word at a time using the self-paced reading paradigm.</p>
+      
+      <p>Lines representing the number of words will be displayed on the screen.
+         Pressing the space bar will reveal the words one by one. 
+         Continue pressing the space bar to advance to the next word.</p>
+         
+      <p>After each sentence, a comprehension question will follow.
+        Press the <strong>F key for YES</strong> and the <strong>J key for NO</strong>.</p>
+      
+      <p>Press the space bar to begin a brief practice session.</p>
+    </div>`,
+    choices: [' ']
+  };
+
+  // Define the practice sentences
+  const practiceSentences = [
+    {
+      "itemID": 1,
+      "group": "practice",
+      "sentence": "The shop has only five tables for selling fruits.",
+      "question": "Does the shop have more than five tables?",
+      "correctAnswer": false
+    },
+    {
+      "itemID": 2,
+      "group": "practice",
+      "sentence": "The professor will grade the exam papers over the weekend.",
+      "question": "Will the professor skip grading during the weekend?",
+      "correctAnswer": false
+    }
+  ];
+
+  // Define the main trial sentences
+  // Each sentence has a condition (animate or inanimate), a sentence, a question, and a correct answer. You can add your own variables as needed.
+  // The following sentences are from Trueswell, Tanenhaus, & Garnsey (1994) Semantic influences on parsing: Use of thematic role information in syntactic ambiguity resolution. Journal of Memory and Language, 33(3), 285-318. https://doi.org/10.1006/jmla.1994.1014
+  // The comprehension questions are created based on the sentence content.
+  // Note that the original experiment was not self-pace reading but an eye-tracking experiment.
+  const mainSentences = [
+    {
+      "itemID": 1,
+      "group": "target",
+      "sentence": "The defendant examined by the lawyer turned out to be unreliable.",
+      "condition": "animate",
+      "question": "Was the defendant reliable?",  
+      "correctAnswer": false,
+      "exp_item": true
+    },
+    {
+      "itemID": 2,
+      "group": "target",
+      "condition": "inanimate",
+      "sentence": "The gold transported by the guards was closely watched.",
+      "question": "Was the gold closely watched?",
+      "correctAnswer": true,
+      "exp_item": true
+    },
+    {
+      "itemID": 3,
+      "group": "target",
+      "condition": "animate",
+      "sentence": "The teacher loved by the class was very easy to understand.",
+      "question": "Was the teacher hard to understand?",
+      "correctAnswer": false,
+      "exp_item": true
+    },
+    {
+      "itemID": 4,
+      "group": "target",
+      "condition": "inanimate",
+      "sentence": "The bricks lifted by the crane were deposited on the roof.",
+      "question": "Were the bricks deposited on the ground?",
+      "correctAnswer": false
+    },
+    {
+      "itemID": 5,
+      "group": "target",
+      "condition": "animate",
+      "sentence": "The student graded by the professor received a low mark.",
+      "question": "Did the student receive a low mark?",
+      "correctAnswer": true,
+      "exp_item": true
+    },
+    {
+      "itemID": 6,
+      "group": "target",
+      "condition": "inanimate",
+      "sentence": "The recipe selected by the judges did not deserve to win.",
+      "question": "Did the recipe deserve to win?",
+      "correctAnswer": false,
+      "exp_item": true
+
+    },
+    {
+      "itemID": 7,
+      "group": "target",
+      "condition": "animate",
+      "sentence": "The specialist requested by the hospital finnaly arrived.",
+      "question": "Did the specialist arrive?",
+      "correctAnswer": true,
+      "exp_item": true
+
+    },
+    {
+      "itemID": 8,
+      "group": "target",
+      "sentence": "The jewelry identified by the victim was held for questioning as evidence.",
+      "question": "Was the jewelry held for questioning?",
+      "correctAnswer": true,
+      "exp_item": true
+    }
+  ];
+
+  // Function to create a self-paced reading trial
+  function make_mw_trial(sentence, comprehension_question, trialNumber, trialType, itemID, correctAnswer, group) {
+    var sentence_as_word_list = sentence.split(" ");
+    var sentence_as_stimulus_sequence = [];
+
+    // Add trial that replaces all words with underscores at the beginning
+    sentence_as_stimulus_sequence.push({
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '<div class="target">' + sentence_as_word_list.map(word => '_'.repeat(word.length)).join(' ') + '</div>',
+      choices: [' '],
+      data: {
+        group: group,
+        trialNumber: trialNumber,
+        exp_item: true,
+        trialType: trialType,
+        itemID: itemID
+      }
+    });
+
+    // Create a trial for each word in the sentence
+    sentence_as_word_list.forEach((word, index) => {
+      var masked_sentence = sentence_as_word_list.map((word, idx) =>
+        idx === index ? word : '_'.repeat(word.length)
+      ).join(' ');
+
+      sentence_as_stimulus_sequence.push({
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: '<div class="target">' + masked_sentence + '</div>',
+        choices: [' '],
+        data: {
+          presented_word: word,
+          trialNumber: trialNumber,
+          regionNumber: index + 1,
+          exp_item: true,
+          trialType: trialType,
+          itemID: itemID,
+          group: group
+        }
+      });
+    });
+
+    // Add the comprehension question
+    sentence_as_stimulus_sequence.push({
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: comprehension_question,
+      choices: ['f', 'j'],
+      prompt: '<div class="left-prompt">F for YES</div><div class="right-prompt">J for NO</div>',
+      data: {
+        group: group,
+        exp_item: true,
+        sentence: sentence,
+        comprehension_question: comprehension_question,
+        trialNumber: trialNumber,
+        trialType: trialType,
+        itemID: itemID,
+        correctAnswer: correctAnswer
+      },
+      on_finish: function (data) {
+        var correctKey = data.correctAnswer ? 'f' : 'j';
+        data.correct = jsPsych.pluginAPI.compareKeys(data.response, correctKey);
+      }
+    });
+
+    return { timeline: sentence_as_stimulus_sequence };
+  }
+
+  // Create practice trials
+  var practiceTrials = practiceSentences.flatMap((stimulus, index) => {
+    var trial = make_mw_trial(
+      stimulus.sentence,
+      stimulus.question,
+      index + 1,
+      "practice",
+      stimulus.itemID,
+      stimulus.correctAnswer,
+      stimulus.group
+    );
+
+    var feedback = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: function () {
+        var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
+        if (lastTrialData.correct) {
+          return "<p style='font-size: 40px; color: green;'>CORRECT</p>";
+        } else {
+          return "<p style='font-size: 40px; color: red;'>INCORRECT</p>";
+        }
+      },
+      trial_duration: 2000,
+      choices: "NO_KEYS"
+    };
+
+    if (index === 0) {
+      return [trial, feedback];
+    } else {
+      var preparationScreen = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `<div class="prepare">Prepare for the next trial. Press the space bar to proceed to the next sentence.</div>`,
+        choices: [' ']
+      };
+      return [preparationScreen, trial, feedback];
+    }
+  });
+
+  // Start main experiment message
+  var before_main_experiment = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: "<p style='text-align:left'>" +
+      "<h2>Main Experiment</h2>" +
+      "<p>Great! You have finished the practice session.</p>" +
+      "<p>Note that no feedback will be provided in the main experiment.</p>" +
+      "<p>Now you will start the main experiment. Click the <i>Next</i> button below to begin.</p>",
+    choices: ['Next']
+  };
+
+  // Create main trials
+  var mainTrials = mainSentences.flatMap((stimulus, index) => {
+    var trial = make_mw_trial(
+      stimulus.sentence,
+      stimulus.question,
+      index + 1,
+      "main",
+      stimulus.itemID,
+      stimulus.correctAnswer,
+      stimulus.group
+    );
+
+    if (index === 0) {
+      return [trial];
+    } else {
+      var preparationScreen = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `<div class="prepare">Prepare for the next trial. Press the space bar to proceed to the next sentence.</div>`,
+        choices: [' ']
+      };
+      return [preparationScreen, trial];
+    }
+  });
+
+  // End of experiment message
+  var end_of_experiment = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `
+      <h2>End of Experiment</h2>
+      <p>Thank you for completing this self-paced reading demonstration!</p>
+      <p>In this demo, you experienced how self-paced reading experiments work:</p>
+      <ul>
+        <li>Words are presented one at a time as you press the space bar</li>
+        <li>Reading times for each word are recorded as the dependent measure</li>
+        <li>Comprehension questions follow each sentence</li>
+      </ul>
+      <p>Your data will be shown on the next screen.</p>
+    `,
+    choices: ['See Results']
+  };
+
+  // Full timeline
+  var timeline = [
+    instructions,
+    ...practiceTrials,
+    before_main_experiment,
+    ...mainTrials,
+    end_of_experiment
+  ];
+
+  // Start the experiment
+  jsPsych.run(timeline);
+</script>
+
+</html>

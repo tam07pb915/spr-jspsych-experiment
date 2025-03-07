@@ -84,7 +84,7 @@ The full experiment version includes Firebase integration for data storage, but 
 - Firebase account (for full experiment only)
 
 ### License
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 The MIT License is a permissive license that allows you to freely use, modify, distribute, and even sell this software, provided that you include the original copyright notice and the license text in any substantial portions of the software.
 
 ## Credit & Acknowledgments

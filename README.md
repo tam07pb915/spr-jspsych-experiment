@@ -4,7 +4,7 @@ This repository contains two versions of a self-paced reading experiment impleme
 
 ## Live Demo
 
-Try the self-paced reading demo online: [SPR Demo](https://tamura-jspsych-demo.netlify.app/spr-demo.html)
+Try the self-paced reading demo online: <a href="https://tamura-jspsych-demo.netlify.app/spr-demo.html" target="_blank">SPR Demo</a>
 
 ## Repository Structure
 

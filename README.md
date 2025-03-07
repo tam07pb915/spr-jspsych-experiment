@@ -79,19 +79,19 @@ The full experiment version includes Firebase integration for data storage, but 
 
 ### Data Output and Analysis
 The experiment produces JSON data in the following format:
-
 - Each trial generates a data object with specific properties
 - Reading time (rt) is recorded in milliseconds for each word segment
 - Comprehension question accuracy is stored
 - Trial metadata (item ID, condition, etc.) is included
 
 Data transformation is necessary for analysis:
-
 - The raw JSON output needs processing to extract reading times by condition
 - You will need to aggregate data across participants and stimuli
 - Analysis typically involves comparing reading times across conditions
 
 Example data processing code will be provided in a separate file. Please see `/sample-experiment/sample-data-output.txt`
+
+**Sample Analysis Showcase**: For a demonstration of how to transform and analyze the data from this experiment, see my [R Markdown document](https://tam07pb915.github.io/spr-jspsych-experiment/sample-experiment/sample-data-transformation.html).
 
 ### Technical Requirements
 

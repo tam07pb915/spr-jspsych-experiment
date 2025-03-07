@@ -117,6 +117,10 @@ Under the following terms:
 
 My implementation builds upon the concepts and code presented in the tutorial while making substantial modifications and additions for specific experimental purposes.
 
+## Notes
+
+This project was developed with assistance from AI tools including ChatGPT and Claude. While the experiment functions properly for its intended purpose, there may be opportunities for code improvements from a professional development perspective. Contributions, suggestions, and feedback from experienced developers are welcome.
+
 ### Citation & Reference
 If you use my code in your research, please cite:
 

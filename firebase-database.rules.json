@@ -1,0 +1,24 @@
+{
+  "rules": {
+    ".read": false,
+    "responses": {
+      "$uid": {
+        "$sessionId": {
+          "checkpoints": {
+            "$checkpointName": {
+              ".write": "auth != null && auth.uid === $uid && newData.exists() && !data.exists() && ($checkpointName === 'practice_complete' || $checkpointName === 'main_midpoint' || $checkpointName === 'pre_final')",
+              ".validate": "newData.hasChildren(['metadata', 'data']) && newData.child('metadata/firebase_uid').val() === $uid && newData.child('metadata/local_session_id').val() === $sessionId"
+            }
+          },
+          "final": {
+            ".write": "auth != null && auth.uid === $uid && newData.exists()",
+            ".validate": "newData.hasChildren(['metadata', 'data']) && newData.child('metadata/firebase_uid').val() === $uid && newData.child('metadata/local_session_id').val() === $sessionId"
+          },
+          "$other": {
+            ".write": false
+          }
+        }
+      }
+    }
+  }
+}
